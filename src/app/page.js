@@ -97,6 +97,12 @@ export default function Home() {
           />
           Go to nextjs.org →
         </a>
+        <a
+          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
+          href="/dashboards"
+        >
+          <button className="rounded-full border border-solid border-blue-500 bg-blue-500 text-white px-4 py-2 hover:bg-blue-600 transition-colors">Manage API Keys</button>
+        </a>
       </footer>
     </div>
   );
