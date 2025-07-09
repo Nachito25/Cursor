@@ -246,7 +246,7 @@ export default function Dashboard({
                 value={modalLimitValue}
                 onChange={e => setModalLimitValue(e.target.value)}
               />
-              <div className="text-xs text-gray-400 mt-1">* If the combined usage of all your keys exceeds your plan's limit, all requests will be rejected.</div>
+              <div className="text-xs text-gray-400 mt-1">* If the combined usage of all your keys exceeds your plan&apos;s limit, all requests will be rejected.</div>
             </div>
             <div className="flex gap-3 mt-6 justify-center">
               <button
