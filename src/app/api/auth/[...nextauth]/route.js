@@ -15,6 +15,9 @@ export const authOptions = {
   ],
   callbacks: {
     async signIn({ user }) {
+      if (!supabaseAdmin) {
+        throw new Error("supabaseAdmin is not initialized. Check SUPABASE_SERVICE_ROLE_KEY.");
+      }
       try {
         console.log("Intentando login para:", user.email);
 
