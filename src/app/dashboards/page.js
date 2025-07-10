@@ -6,6 +6,7 @@ import Sidebar from "../Sidebar";
 import Toast from "../Toast";
 import Dashboard from "../Dashboard";
 import useApiKeys from "../hooks/useApiKeys";
+import SignOutButton from "../SignOutButton";
 
 const sidebarLinks = [
   { name: "Overview", icon: "🏠" },
@@ -76,6 +77,9 @@ export default function DashboardsPage(props) {
       <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} sidebarLinks={sidebarLinks} />
       <Toast show={showToast} message={toastMsg} color={toastColor} onClose={() => setShowToast(false)} />
       <main className="flex-1 p-10">
+        <div className="mb-4 flex justify-end">
+          <SignOutButton />
+        </div>
         <Dashboard
           apiKeys={apiKeys}
           loading={loading}
