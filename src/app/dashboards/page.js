@@ -1,5 +1,6 @@
 "use client";
-import { useState } from "react";
+import { useSession, signIn } from "next-auth/react";
+import { useEffect, useState } from "react";
 import { supabase } from "../lib/supabaseClient";
 import Sidebar from "../Sidebar";
 import Toast from "../Toast";
@@ -21,7 +22,9 @@ const KEY_TYPES = [
   { label: "Production", value: "prod", info: "Rate limited to 1,000 requests/minute", enabled: false },
 ];
 
-export default function Home() {
+export default function DashboardsPage(props) {
+  // TODOS los hooks deben ir aquí arriba
+  const { data: session, status } = useSession();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [showToast, setShowToast] = useState(false);
@@ -37,6 +40,23 @@ export default function Home() {
     refreshApiKeys,
   } = useApiKeys();
 
+  useEffect(() => {
+    if (status === "unauthenticated") {
+      signIn("google");
+    }
+  }, [status]);
+
+  if (status === "loading") {
+    return <div>Cargando...</div>;
+  }
+
+  if (!session) {
+    return null;
+  }
+
+  // ...el resto de tu dashboard aquí...
+  // Puedes dejar el resto del código de tu dashboard debajo de este bloque
+  // Ejemplo:
   return (
     <div className="flex min-h-screen bg-[#f8fafd] relative">
       {/* Sidebar Toggle Button (always visible) */}

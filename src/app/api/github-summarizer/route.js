@@ -32,24 +32,5 @@ export async function POST(req) {
   }
 } 
 
-async function getReadmeContent(githubUrl) {
-  const owner = githubUrl.split('/')[3];
-  const repo = githubUrl.split('/')[4];
-  const apiUrl = `https://api.github.com/repos/${owner}/${repo}/readme`;
-
-  const response = await fetch(apiUrl, {
-    headers: {
-      'Accept': 'application/vnd.github.v3.raw',
-    },
-  });
-
-  if (!response.ok) {
-    throw new Error(`Failed to fetch README: ${response.statusText}`);
-  }
-
-  return await response.text();
-}
-
-
 
 
