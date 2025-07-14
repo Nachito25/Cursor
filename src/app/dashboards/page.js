@@ -1,7 +1,7 @@
 "use client";
 import { useSession, signIn } from "next-auth/react";
 import { useEffect, useState } from "react";
-import { supabase } from "../lib/supabaseClient";
+import { supabase } from "../../lib/supabaseClient";
 import Sidebar from "../Sidebar";
 import Toast from "../Toast";
 import Dashboard from "../Dashboard";
