@@ -5,7 +5,7 @@ import { authOptions } from '../../auth/[...nextauth]/route';
 
 // Helper to get user_id from session
 async function getUserIdFromSession() {
-  const session = await getServerSession(authOptions);
+  const session = await getServerSession();
   if (!session?.user?.email) return null;
   const { data, error } = await supabase
     .from('users')
