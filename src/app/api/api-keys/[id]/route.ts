@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth/next';
 import { supabase } from '../../../../lib/supabaseClient';
-import { authOptions } from '../../auth/[...nextauth]/route';
+//import { authOptions } from '../../auth/[...nextauth]/route';
 
 // Helper to get user_id from session
 async function getUserIdFromSession() {
