@@ -18,9 +18,8 @@ async function getUserIdFromSession() {
 
 export async function GET(
   request: Request,
-  context: { params: { id: string } }
+  { params }: any
 ) {
-  const { params } = context;
   const userId = await getUserIdFromSession();
   if (!userId) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   const { data, error } = await supabase
@@ -35,9 +34,8 @@ export async function GET(
 
 export async function PATCH(
   request: Request,
-  context: { params: { id: string } }
+  { params }: any
 ) {
-  const { params } = context;
   const userId = await getUserIdFromSession();
   if (!userId) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   const body = await request.json();
@@ -54,9 +52,8 @@ export async function PATCH(
 
 export async function DELETE(
   request: Request,
-  context: { params: { id: string } }
+  { params }: any
 ) {
-  const { params } = context;
   const userId = await getUserIdFromSession();
   if (!userId) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   const { error } = await supabase
