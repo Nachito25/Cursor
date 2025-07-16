@@ -1,11 +1,11 @@
 "use client";
 import { useSession, signIn } from "next-auth/react";
-import { useEffect, useState } from "react";
-import { supabase } from "../../lib/supabaseClient";
+import { useEffect, useState, useCallback } from "react";
+// import { supabase } from "../../lib/supabaseClient"; // Remove direct supabase usage
 import Sidebar from "../Sidebar";
 import Toast from "../Toast";
 import Dashboard from "../Dashboard";
-import useApiKeys from "../hooks/useApiKeys";
+// import useApiKeys from "../hooks/useApiKeys"; // Remove custom hook
 import SignOutButton from "../SignOutButton";
 
 const sidebarLinks = [
@@ -24,28 +24,88 @@ const KEY_TYPES = [
 ];
 
 export default function DashboardsPage(props) {
-  // TODOS los hooks deben ir aquí arriba
   const { data: session, status } = useSession();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [showToast, setShowToast] = useState(false);
   const [toastMsg, setToastMsg] = useState("");
   const [toastColor, setToastColor] = useState("green");
+  const [apiKeys, setApiKeys] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-  const {
-    apiKeys,
-    loading,
-    createApiKey,
-    updateApiKey,
-    deleteApiKey,
-    refreshApiKeys,
-  } = useApiKeys();
+  // Fetch all API keys for the user
+  const fetchApiKeys = useCallback(async () => {
+    setLoading(true);
+    const res = await fetch("/api/api-keys");
+    if (res.ok) {
+      const data = await res.json();
+      setApiKeys(data);
+    }
+    setLoading(false);
+  }, []);
+
+  // Create a new API key
+  const createApiKey = async ({ name, value }) => {
+    setLoading(true);
+    const res = await fetch("/api/api-keys", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ name, value }),
+    });
+    if (res.ok) {
+      const data = await res.json();
+      setApiKeys((prev) => [...prev, data]);
+      setLoading(false);
+      return { success: true };
+    }
+    setLoading(false);
+    return { success: false };
+  };
+
+  // Update an API key
+  const updateApiKey = async (id, { name }) => {
+    setLoading(true);
+    const res = await fetch(`/api/api-keys/${id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ name }),
+    });
+    if (res.ok) {
+      const data = await res.json();
+      setApiKeys((prev) => prev.map((k) => (k.id === id ? { ...k, name: data.name } : k)));
+      setLoading(false);
+      return { success: true };
+    }
+    setLoading(false);
+    return { success: false };
+  };
+
+  // Delete an API key
+  const deleteApiKey = async (id) => {
+    setLoading(true);
+    const res = await fetch(`/api/api-keys/${id}`, {
+      method: "DELETE",
+    });
+    if (res.ok) {
+      setApiKeys((prev) => prev.filter((k) => k.id !== id));
+      setLoading(false);
+      return { success: true };
+    }
+    setLoading(false);
+    return { success: false };
+  };
 
   useEffect(() => {
     if (status === "unauthenticated") {
       signIn("google");
+    } else if (status === "authenticated") {
+      fetchApiKeys();
     }
-  }, [status]);
+  }, [status, fetchApiKeys]);
 
   if (status === "loading") {
     return <div>Cargando...</div>;
@@ -55,9 +115,6 @@ export default function DashboardsPage(props) {
     return null;
   }
 
-  // ...el resto de tu dashboard aquí...
-  // Puedes dejar el resto del código de tu dashboard debajo de este bloque
-  // Ejemplo:
   return (
     <div className="flex min-h-screen bg-[#f8fafd] relative">
       {/* Sidebar Toggle Button (always visible) */}
@@ -67,10 +124,8 @@ export default function DashboardsPage(props) {
       >
         <span className="sr-only">Toggle sidebar</span>
         {sidebarOpen ? (
-          // Left arrow icon
           <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-arrow-left"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
         ) : (
-          // Hamburger icon
           <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-menu"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
         )}
       </button>
