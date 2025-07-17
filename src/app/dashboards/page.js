@@ -2,7 +2,7 @@
 import { useSession, signIn } from "next-auth/react";
 import { useEffect, useState, useCallback } from "react";
 // import { supabase } from "../../lib/supabaseClient"; // Remove direct supabase usage
-import Sidebar from "../Sidebar";
+import { Sidebar } from "../Sidebar";
 import Toast from "../Toast";
 import Dashboard from "../Dashboard";
 // import useApiKeys from "../hooks/useApiKeys"; // Remove custom hook
